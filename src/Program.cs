@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -47,12 +47,7 @@ namespace ScrewTurn2Markdown {
                 .Read((content, path) =>
                 {
                     Console.WriteLine(path.FileName);
-                    // Skipping first four lines (metadata)
                     var reader = new StringReader(content);
-                    reader.ReadLine();
-                    reader.ReadLine();
-                    reader.ReadLine();
-                    reader.ReadLine();
                     content = reader.ReadToEnd();
                     if (content == null) return;
                     // OK, using regular expressions, not ideal, I know, but I need to get that done. Shame on me. No perf pressure here, also.
@@ -60,6 +55,7 @@ namespace ScrewTurn2Markdown {
                     var nowikiSections = new List<string>();
                     var literalSections = new List<string>();
                     content = content
+                        .Replace("##PAGE##", "")
                         .Apply(Literal, m =>
                         {
                             literalSections.Add(m.Groups[0].Value);
