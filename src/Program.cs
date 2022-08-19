@@ -54,7 +54,7 @@ namespace ScrewTurn2Markdown {
                     // Do not change the order of these operations: it is meaningful.
                     var nowikiSections = new List<string>();
                     var literalSections = new List<string>();
-                    content = content
+                    content = "# " + content
                         .Replace("##PAGE##", "")
                         .Apply(Literal, m =>
                         {
