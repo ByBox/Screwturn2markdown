@@ -44,66 +44,69 @@ namespace ScrewTurn2Markdown {
             var dest = Path.Get(args.Length > 1 ? args[1] : @"H:\MyWorks\C#\Screwturn2markdown\SourcePages");
             source.Combine("Pages")
                 .Files(p => !RevisionEx.IsMatch(p.FileName))
-                .Read((content, path) => {
-                          Console.WriteLine(path.FileName);
-                          // Skipping first four lines (metadata)
-                          var reader = new StringReader(content);
-                          reader.ReadLine();
-                          reader.ReadLine();
-                          reader.ReadLine();
-                          reader.ReadLine();
-                          content = reader.ReadToEnd();
-                          if (content == null) return;
-                          // OK, using regular expressions, not ideal, I know, but I need to get that done. Shame on me. No perf pressure here, also.
-                          // Do not change the order of these operations: it is meaningful.
-                          var nowikiSections = new List<string>();
-                          var literalSections = new List<string>();
-                          content = content
-                              .Apply(Literal, m => {
-                                                  literalSections.Add(m.Groups[0].Value);
-                                                  return "<literal:" + (literalSections.Count - 1) + "/>";
-                                              })
-                              .Apply(NoWiki, m => {
-                                                 nowikiSections.Add(m.Groups[1].Value.EscapeForMarkdown());
-                                                 return "<nowiki:" + (nowikiSections.Count - 1) + "/>";
-                                             })
-                              .Apply(Bold, "**$1**")
-                              .Apply(Italic, "_$1_") // must be after bold.
-                              .Apply(Underlined, "<span style=\"text-decoration:underline\">$1</span>")
-                              .Apply(Separator, "- - -")
-                              .Apply(Strike, "$1<del>$2</del>")
-                              .ConvertEnumerations() // Must be before headers
-                              .ConvertTables()
-                              .RemoveToc()
-                              .Apply(H6, "###### $1")
-                              .Apply(H5, "##### $1")
-                              .Apply(H4, "#### $1")
-                              .Apply(H3, "### $1")
-                              .Apply(H2, "## $1")
-                              .Apply(H1, "# $1")
-                              .Apply(Box, "> $1")
-                              .Replace("{br}", "  \r\n")
-                              .ConvertUp()
-                              .ConvertUpRelative()
-                              .Apply(Anchor, "")
-                              .Apply(Img, "![$2]($3)") // must be before link
-                              .Apply(Link, StringHelpers.ConvertLink)
-                              .Apply(NoWikiRestore, m => nowikiSections[int.Parse(m.Groups[1].Value)])
-                              .Apply(LiteralRestore, m => literalSections[int.Parse(m.Groups[1].Value)])
-                              .Apply(InlineCode, "`$1`")
-                              .Apply(CodeBlock, StringHelpers.FormatMarkdownCodeSample)
-                              .Replace("<nowiki>", "")
-                              .Replace("</nowiki>", "")
-                              .Replace('’', '\'')
-                              .Replace("®", "&reg;")
-                              .Replace("©", "&copy;")
-                              .Replace("™", "&trade;")
-                              .Replace("–", "-")
-                              .Replace("»", "&raquo;")
-                              .Replace("«", "&laquo;");
-                          dest.Combine(path.ChangeExtension(".md").FileName)
-                              .Write(content);
-                      });
+                .Read((content, path) =>
+                {
+                    Console.WriteLine(path.FileName);
+                    // Skipping first four lines (metadata)
+                    var reader = new StringReader(content);
+                    reader.ReadLine();
+                    reader.ReadLine();
+                    reader.ReadLine();
+                    reader.ReadLine();
+                    content = reader.ReadToEnd();
+                    if (content == null) return;
+                    // OK, using regular expressions, not ideal, I know, but I need to get that done. Shame on me. No perf pressure here, also.
+                    // Do not change the order of these operations: it is meaningful.
+                    var nowikiSections = new List<string>();
+                    var literalSections = new List<string>();
+                    content = content
+                        .Apply(Literal, m =>
+                        {
+                            literalSections.Add(m.Groups[0].Value);
+                            return "<literal:" + (literalSections.Count - 1) + "/>";
+                        })
+                        .Apply(NoWiki, m =>
+                        {
+                            nowikiSections.Add(m.Groups[1].Value.EscapeForMarkdown());
+                            return "<nowiki:" + (nowikiSections.Count - 1) + "/>";
+                        })
+                        .Apply(Bold, "**$1**")
+                        .Apply(Italic, "_$1_") // must be after bold.
+                        .Apply(Underlined, "<span style=\"text-decoration:underline\">$1</span>")
+                        .Apply(Separator, "- - -")
+                        .Apply(Strike, "$1<del>$2</del>")
+                        .ConvertEnumerations() // Must be before headers
+                        .ConvertTables()
+                        .RemoveToc()
+                        .Apply(H6, "###### $1")
+                        .Apply(H5, "##### $1")
+                        .Apply(H4, "#### $1")
+                        .Apply(H3, "### $1")
+                        .Apply(H2, "## $1")
+                        .Apply(H1, "# $1")
+                        .Apply(Box, "> $1")
+                        .Replace("{br}", "  \r\n")
+                        .ConvertUp()
+                        .ConvertUpRelative()
+                        .Apply(Anchor, "")
+                        .Apply(Img, "![$2]($3)") // must be before link
+                        .Apply(Link, StringHelpers.ConvertLink)
+                        .Apply(NoWikiRestore, m => nowikiSections[int.Parse(m.Groups[1].Value)])
+                        .Apply(LiteralRestore, m => literalSections[int.Parse(m.Groups[1].Value)])
+                        .Apply(InlineCode, "`$1`")
+                        .Apply(CodeBlock, StringHelpers.FormatMarkdownCodeSample)
+                        .Replace("<nowiki>", "")
+                        .Replace("</nowiki>", "")
+                        .Replace('’', '\'')
+                        .Replace("®", "&reg;")
+                        .Replace("©", "&copy;")
+                        .Replace("™", "&trade;")
+                        .Replace("–", "-")
+                        .Replace("»", "&raquo;")
+                        .Replace("«", "&laquo;");
+                    dest.Combine(path.ChangeExtension(".md").FileName)
+                        .Write(content);
+                });
         }
     }
 }
