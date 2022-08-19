@@ -50,6 +50,24 @@ namespace ScrewTurn2Markdown {
                     var reader = new StringReader(content);
                     content = reader.ReadToEnd();
                     if (content == null) return;
+                    var match = Regex.Match(content, @"(?<name>\A.*)\r\n");
+                    var newFileName = string.Empty;
+                    if (match.Success)
+                    {
+                        newFileName = match.Groups["name"].Value;
+                        // Use URL encoding so it's obvious what the characters were
+                        newFileName = newFileName.Replace("\\", "%5C")
+                            .Replace("/", "%2F")
+                            .Replace(":", "%3A")
+                            .Replace("?", "%3F")
+                            .Replace("\"", "%22")
+                            .Replace(">", "%3E");
+                    }
+                    else
+                    {
+                        throw new Exception("Can't get filename from content");
+                    }
+
                     // OK, using regular expressions, not ideal, I know, but I need to get that done. Shame on me. No perf pressure here, also.
                     // Do not change the order of these operations: it is meaningful.
                     var nowikiSections = new List<string>();
@@ -100,7 +118,7 @@ namespace ScrewTurn2Markdown {
                         .Replace("–", "-")
                         .Replace("»", "&raquo;")
                         .Replace("«", "&laquo;");
-                    dest.Combine(path.ChangeExtension(".md").FileName)
+                    dest.Combine($"{newFileName}.md")
                         .Write(content);
                 });
         }
