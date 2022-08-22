@@ -119,6 +119,15 @@ namespace ScrewTurn2Markdown {
                         .Replace("–", "-")
                         .Replace("»", "&raquo;")
                         .Replace("«", "&laquo;");
+                    var fileIndex = 1;
+                    var testFileName = newFileName;
+                    while (dest.Combine($"{testFileName}.md").Exists)
+                    {
+                        testFileName = $"{newFileName} duplicate {fileIndex}";
+                        fileIndex++;
+                    }
+                    newFileName = testFileName;
+
                     dest.Combine($"{newFileName}.md")
                         .Write(content);
                 });
