@@ -103,7 +103,7 @@ namespace ScrewTurn2Markdown {
                         .Replace("»", "&raquo;")
                         .Replace("«", "&laquo;");
                     dest.Combine(path.ChangeExtension(".md").FileName)
-                        .Write(content, Encoding.UTF8);
+                        .Write(content, new UTF8Encoding(false));
                 });
         }
     }
