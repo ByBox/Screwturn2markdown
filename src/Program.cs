@@ -52,6 +52,7 @@ namespace ScrewTurn2Markdown {
                     var reader = new StringReader(content);
                     content = reader.ReadToEnd();
                     if (content == null) return;
+                    if (Regex.Match(content, @"\A.*\r\n.*\r\n.*\r\n>>> ").Success) return; // Skip redirection pages
                     // OK, using regular expressions, not ideal, I know, but I need to get that done. Shame on me. No perf pressure here, also.
                     // Do not change the order of these operations: it is meaningful.
                     var nowikiSections = new List<string>();
