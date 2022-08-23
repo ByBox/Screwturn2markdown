@@ -40,6 +40,7 @@ namespace ScrewTurn2Markdown {
         private static readonly Regex Img = new Regex(@"\[image(right|auto|left|)\|(.*?)\|(.*?)(\|(.*?))?\]", RegexOptions.Compiled | RegexOptions.Singleline);
         private static readonly Regex Anchor = new Regex(@"\[anchor\|#(.+?)\]", RegexOptions.Compiled | RegexOptions.Singleline);
         private static readonly Regex Br = new Regex(@"{br}", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
+        private static readonly Regex MetaData = new Regex(@"\A(.+?)\r\n(.+?)\|(.+?)(?:\||\r\n)", RegexOptions.Compiled | RegexOptions.Singleline);
 
         public static void Main(string[] args) {
             var source = Path.Get(args.Length > 0 ? args[0] : @"\\ottawa\c$\inetpub\apex-net.it\Apex-net DOC\public");
@@ -77,6 +78,7 @@ namespace ScrewTurn2Markdown {
                         .ConvertEnumerations() // Must be before headers
                         .ConvertTables()
                         .RemoveToc()
+                        .Apply(MetaData, "$1\r\n## $2\r\n_$3_\r\n")
                         .Apply(H6, "###### $1")
                         .Apply(H5, "##### $1")
                         .Apply(H4, "#### $1")
