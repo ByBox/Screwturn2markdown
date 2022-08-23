@@ -20,7 +20,7 @@ namespace ScrewTurn2Markdown {
         private static readonly Regex Bold = new Regex(@"'''(.+?)'''", RegexOptions.Compiled | RegexOptions.Singleline);
         private static readonly Regex Italic = new Regex(@"''(.+?)''", RegexOptions.Compiled | RegexOptions.Singleline);
         private static readonly Regex Underlined = new Regex(@"__(.+?)__", RegexOptions.Compiled | RegexOptions.Singleline);
-        private static readonly Regex Strike = new Regex(@"([^!])--(.+?)--", RegexOptions.Compiled | RegexOptions.Singleline);
+        private static readonly Regex Strike = new Regex(@"([^!])--([^>])(.+?)--", RegexOptions.Compiled | RegexOptions.Singleline);
         private static readonly Regex Separator = new Regex(@"----", RegexOptions.Compiled | RegexOptions.Singleline);
         private static readonly Regex InlineCode = new Regex(@"\{\{(.+?)\}\}", RegexOptions.Compiled | RegexOptions.Singleline);
         private static readonly Regex CodeBlock = new Regex(@"@@(.+?)@@", RegexOptions.Compiled | RegexOptions.Singleline);
@@ -74,7 +74,7 @@ namespace ScrewTurn2Markdown {
                         .Apply(Underlined, "<span style=\"text-decoration:underline\">$1</span>") // must be before italic
                         .Apply(Italic, "_$1_") // must be after bold.
                         .Apply(Separator, "- - -")
-                        .Apply(Strike, "$1<del>$2</del>")
+                        .Apply(Strike, "$1<del>$2$3</del>")
                         .ConvertEnumerations() // Must be before headers
                         .ConvertTables()
                         .RemoveToc()
