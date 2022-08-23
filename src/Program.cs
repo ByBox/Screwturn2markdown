@@ -86,8 +86,8 @@ namespace ScrewTurn2Markdown {
                             return "<nowiki:" + (nowikiSections.Count - 1) + "/>";
                         })
                         .Apply(Bold, "**$1**")
+                        .Apply(Underlined, "<span style=\"text-decoration:underline\">$1</span>") // must be before italic
                         .Apply(Italic, "_$1_") // must be after bold.
-                        .Apply(Underlined, "<span style=\"text-decoration:underline\">$1</span>")
                         .Apply(Separator, "- - -")
                         .Apply(Strike, "$1<del>$2</del>")
                         .ConvertEnumerations() // Must be before headers
