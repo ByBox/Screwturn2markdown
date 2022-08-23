@@ -38,6 +38,7 @@ namespace ScrewTurn2Markdown {
         private static readonly Regex LiteralRestore = new Regex(@"<literal:(\d+?)/>", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
         private static readonly Regex Img = new Regex(@"\[image(right|auto|left|)\|(.*?)\|(.*?)(\|(.*?))?\]", RegexOptions.Compiled | RegexOptions.Singleline);
         private static readonly Regex Anchor = new Regex(@"\[anchor\|#(.+?)\]", RegexOptions.Compiled | RegexOptions.Singleline);
+        private static readonly Regex Br = new Regex(@"{br}", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
         public static void Main(string[] args) {
             var source = Path.Get(args.Length > 0 ? args[0] : @"\\ottawa\c$\inetpub\apex-net.it\Apex-net DOC\public");
@@ -100,7 +101,7 @@ namespace ScrewTurn2Markdown {
                         .Apply(H2, "## $1")
                         .Apply(H1, "# $1")
                         .Apply(Box, "> $1")
-                        .Replace("{br}", "  \r\n")
+                        .Apply(Br, "  \r\n")
                         .ConvertUp()
                         .ConvertUpRelative()
                         .Apply(Anchor, "")
