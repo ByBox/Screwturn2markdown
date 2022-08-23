@@ -104,7 +104,9 @@ namespace ScrewTurn2Markdown {
                         .Replace("™", "&trade;")
                         .Replace("–", "-")
                         .Replace("»", "&raquo;")
-                        .Replace("«", "&laquo;");
+                        .Replace("«", "&laquo;")
+                        .Replace("“", "\"")
+                        .Replace("”", "\"");
                     dest.Combine(path.ChangeExtension(".md").FileName)
                         .Write(content, new UTF8Encoding(false));
                 });
