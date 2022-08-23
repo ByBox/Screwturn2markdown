@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
 using Path = Fluent.IO.Path;
 
@@ -130,7 +131,7 @@ namespace ScrewTurn2Markdown {
                     newFileName = testFileName;
 
                     dest.Combine($"{newFileName}.md")
-                        .Write(content);
+                        .Write(content, Encoding.UTF8);
                 });
         }
     }
