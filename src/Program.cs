@@ -109,7 +109,9 @@ namespace ScrewTurn2Markdown {
                         .Replace("«", "&laquo;")
                         .Replace("“", "\"")
                         .Replace("”", "\"")
-                        .Apply(Esc, m => WebUtility.HtmlEncode(m.Groups[1].Value));
+                        .Apply(Esc, m => WebUtility.HtmlEncode(m.Groups[1].Value))
+                        .Replace("<T>", "&lt;T&gt;")
+                        .Replace("<string>", "&lt;string&gt;");
                     dest.Combine(path.ChangeExtension(".md").FileName)
                         .Write(content, new UTF8Encoding(false));
                 });
