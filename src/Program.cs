@@ -21,7 +21,7 @@ namespace ScrewTurn2Markdown {
         private static readonly Regex Bold = new Regex(@"'''(.+?)'''", RegexOptions.Compiled | RegexOptions.Singleline);
         private static readonly Regex Italic = new Regex(@"''(.+?)''", RegexOptions.Compiled | RegexOptions.Singleline);
         private static readonly Regex Underlined = new Regex(@"__(.+?)__", RegexOptions.Compiled | RegexOptions.Singleline);
-        private static readonly Regex Strike = new Regex(@"([^!])--([^>])(.+?)--", RegexOptions.Compiled | RegexOptions.Singleline);
+        private static readonly Regex Strike = new Regex(@"([^!])--([^>])(.+?)--", RegexOptions.Compiled);
         private static readonly Regex Separator = new Regex(@"----", RegexOptions.Compiled | RegexOptions.Singleline);
         private static readonly Regex InlineCode = new Regex(@"\{\{(.+?)\}\}", RegexOptions.Compiled | RegexOptions.Singleline);
         private static readonly Regex CodeBlock = new Regex(@"@@(.+?)@@", RegexOptions.Compiled | RegexOptions.Singleline);
