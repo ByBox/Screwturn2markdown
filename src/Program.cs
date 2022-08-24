@@ -40,7 +40,7 @@ namespace ScrewTurn2Markdown {
         private static readonly Regex LiteralRestore = new Regex(@"<literal:(\d+?)/>", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
         private static readonly Regex Img = new Regex(@"\[image(right|auto|left|)\|(.*?)\|(.*?)(\|(.*?))?\]", RegexOptions.Compiled | RegexOptions.Singleline);
         private static readonly Regex Anchor = new Regex(@"\[anchor\|#(.+?)\]", RegexOptions.Compiled | RegexOptions.Singleline);
-        private static readonly Regex Br = new Regex(@"{br}", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
+        private static readonly Regex Br = new Regex(@"(?:{br}|<br ?/?>)[\s]*?(\r\n)?", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
         private static readonly Regex MetaData = new Regex(@"\A(.+?)\r\n(.+?)\|(.+?)(?:\||\r\n)", RegexOptions.Compiled | RegexOptions.Singleline);
         private static readonly Regex Esc = new Regex(@"<esc>(.+?)</esc>", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
