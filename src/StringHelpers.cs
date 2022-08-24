@@ -39,13 +39,6 @@ namespace ScrewTurn2Markdown {
             var text = match.Groups.Count > 4 ? match.Groups[4].Value.Trim() : "";
             if (String.IsNullOrWhiteSpace(text) && url.IndexOf('-') == -1) text = url;
             var before = match.Groups[1];
-            if (url.StartsWith("mailto:")) {
-                url = url.Substring(7);
-                // Strip parameters
-                var question = url.IndexOf('?');
-                if (question != -1) url = url.Substring(0, question);
-                return before + "<" + url + ">";
-            }
             if (String.IsNullOrEmpty(text)) {
                 return before + "<" + url + ">";
             }
