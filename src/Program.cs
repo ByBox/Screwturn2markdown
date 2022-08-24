@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using Path = Fluent.IO.Path;
@@ -41,6 +42,7 @@ namespace ScrewTurn2Markdown {
         private static readonly Regex Anchor = new Regex(@"\[anchor\|#(.+?)\]", RegexOptions.Compiled | RegexOptions.Singleline);
         private static readonly Regex Br = new Regex(@"{br}", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
         private static readonly Regex MetaData = new Regex(@"\A(.+?)\r\n(.+?)\|(.+?)(?:\||\r\n)", RegexOptions.Compiled | RegexOptions.Singleline);
+        private static readonly Regex Esc = new Regex(@"<esc>(.+?)</esc>", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
         public static void Main(string[] args) {
             var source = Path.Get(args.Length > 0 ? args[0] : @"\\ottawa\c$\inetpub\apex-net.it\Apex-net DOC\public");
@@ -106,7 +108,8 @@ namespace ScrewTurn2Markdown {
                         .Replace("»", "&raquo;")
                         .Replace("«", "&laquo;")
                         .Replace("“", "\"")
-                        .Replace("”", "\"");
+                        .Replace("”", "\"")
+                        .Apply(Esc, m => WebUtility.HtmlEncode(m.Groups[1].Value));
                     dest.Combine(path.ChangeExtension(".md").FileName)
                         .Write(content, new UTF8Encoding(false));
                 });
