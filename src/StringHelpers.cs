@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -135,6 +135,7 @@ namespace ScrewTurn2Markdown {
                     if (line.Trim() == "|}") {
                         if (inarow) writer.WriteLine("</tr>");
                         writer.WriteLine("</table>");
+                        inarow = false;
                         inTable = false;
                     }
                     else if (line.StartsWith("|+ ")) {
