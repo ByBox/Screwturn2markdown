@@ -153,7 +153,7 @@ namespace ScrewTurn2Markdown {
                     else if (line.StartsWith("| ")) {
                         var separator = line.IndexOf(" | ");
                         if (separator != -1) {
-                            writer.WriteLine("<td " + line.Substring(2, separator - 2) + ">" + line.Substring(separator + 3));
+                            writer.WriteLine("<td " + line.Substring(2, separator - 2) + ">" + line.Substring(separator + 3) + "</td>");
                         }
                         else {
                             foreach (var cell in line.Substring(2).Split(new[] { " || " }, StringSplitOptions.RemoveEmptyEntries)) {
