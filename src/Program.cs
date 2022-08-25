@@ -44,6 +44,10 @@ namespace ScrewTurn2Markdown {
         private static readonly Regex MetaData = new Regex(@"\A(.+?)\r\n(.+?)\|(.+?)(?:\||\r\n)", RegexOptions.Compiled | RegexOptions.Singleline);
         private static readonly Regex Esc = new Regex(@"<esc>(.+?)</esc>", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
+        private const string OpenAngleBracketWithoutMatchingTagPattern = @"<(?!/?(table|thead|tr|td|span|literal|nowiki|http|img|sub|del|a |/a>|!--|caption|ol|ul|li|font|b>|/b>))";
+        private static readonly Regex OpenAngleBracketWithoutMatchingTagNotInCodeBlock = new Regex(@"(?<!`|    [\s\W\w]*?)"+ OpenAngleBracketWithoutMatchingTagPattern, RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
+        private static readonly Regex OpenAngleBracketWithoutMatchingTagForConfluenceImport = new Regex(OpenAngleBracketWithoutMatchingTagPattern, RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
+
         public static void Main(string[] args) {
             var source = Path.Get(args.Length > 0 ? args[0] : @"\\ottawa\c$\inetpub\apex-net.it\Apex-net DOC\public");
             var dest = Path.Get(args.Length > 1 ? args[1] : @"H:\MyWorks\C#\Screwturn2markdown\SourcePages");
@@ -110,10 +114,15 @@ namespace ScrewTurn2Markdown {
                         .Replace("“", "\"")
                         .Replace("”", "\"")
                         .Apply(Esc, m => WebUtility.HtmlEncode(m.Groups[1].Value))
-                        .Replace("<T>", "&lt;T&gt;")
-                        .Replace("<string>", "&lt;string&gt;");
+                        .Replace("<T>", "&lt;T&gt;");
+
                     dest.Combine(path.ChangeExtension(".md").FileName)
-                        .Write(content, new UTF8Encoding(false));
+                        .Write(content.Apply(OpenAngleBracketWithoutMatchingTagNotInCodeBlock, "&lt;"),
+                            new UTF8Encoding(false));
+                    destForConfluence.Combine(path.ChangeExtension(".md").FileName)
+                        .Write(
+                            content.Apply(OpenAngleBracketWithoutMatchingTagForConfluenceImport, "&lt;"),
+                            new UTF8Encoding(false));
                 });
         }
     }
