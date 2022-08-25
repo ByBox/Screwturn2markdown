@@ -39,8 +39,9 @@ namespace ScrewTurn2Markdown {
             var text = match.Groups.Count > 4 ? match.Groups[4].Value.Trim() : "";
             if (String.IsNullOrWhiteSpace(text) && url.IndexOf('-') == -1) text = url;
             var before = match.Groups[1];
-            if (String.IsNullOrEmpty(text)) {
-                return before + "<" + url + ">";
+            if (String.IsNullOrEmpty(text))
+            {
+                text = url;
             }
             return before + "[" + text + "](" + url + ")";
         }
