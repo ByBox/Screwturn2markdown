@@ -1,11 +1,12 @@
 using System;
 using System.IO;
+using System.Net;
 using System.Text.RegularExpressions;
 
 namespace ScrewTurn2Markdown {
     public static class StringHelpers {
-        private static readonly Regex Up = new Regex(@"\{UP\}", RegexOptions.Compiled | RegexOptions.Singleline);
-        private static readonly Regex UpRelative = new Regex(@"\{UP\((.+?)\)\}", RegexOptions.Compiled | RegexOptions.Singleline);
+        private static readonly Regex Up = new Regex(@"\{UP\}(.+?)([\|\]\)])", RegexOptions.Compiled | RegexOptions.Singleline);
+        private static readonly Regex UpRelative = new Regex(@"\{UP\((.+?)\)\}(.+?)([\|\]\)])", RegexOptions.Compiled | RegexOptions.Singleline);
  
         public static string Apply(this string str, Regex expression, string replacement) {
             return expression.Replace(str, replacement);
@@ -51,11 +52,42 @@ namespace ScrewTurn2Markdown {
         }
 
         public static string ConvertUp(this string str) {
-            return Up.Replace(str, m => "../Upload" + (str[m.Index + m.Length] == '/' ? "" : "/"));
+            return Up.Replace(str, m =>
+            {
+                var value = m.Groups[1].Value;
+                var separator = (value[0] == '/' ? "" : "/");
+                return UrlEncodeParts("../Upload" + separator + value) + m.Groups[2].Value;
+            });
         }
 
         public static string ConvertUpRelative(this string str) {
-            return UpRelative.Replace(str, m => "../Attachments/" + m.Groups[1].Value + (str[m.Index + m.Length] == '/' ? "" : "/"));
+            return UpRelative.Replace(str, m =>
+            {
+                var folder = m.Groups[1].Value;
+                var fileOrDescription = m.Groups[2].Value;
+                var separator = (fileOrDescription[0] == '/' ? "" : "/");
+
+                var path = folder + separator + fileOrDescription;
+                var urlEncodeParts = UrlEncodeParts("../Attachments/" + path) + m.Groups[3].Value;
+                return urlEncodeParts;
+            });
+        }
+
+        public static string UrlEncodeParts(string str)
+        {
+            var returnValue = "";
+            var parts = str.Split('/');
+            for (var i = 0; i < parts.Length; i++)
+            {
+                var part = parts[i];
+                returnValue += WebUtility.UrlEncode(WebUtility.UrlDecode(part));
+                if (i != parts.Length - 1)
+                {
+                    returnValue += "/";
+                }
+            }
+            returnValue = returnValue.Replace("+", "%20"); // Markdown needs %20 rather than +
+            return returnValue;
         }
 
         public static string FormatMarkdownCodeSample(Match match) {
