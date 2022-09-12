@@ -44,7 +44,7 @@ namespace ScrewTurn2Markdown {
         private static readonly Regex MetaData = new Regex(@"\A(.+?)\r\n(.+?)\|(.+?)(?:\||\r\n)", RegexOptions.Compiled | RegexOptions.Singleline);
         private static readonly Regex Esc = new Regex(@"<esc>(.+?)</esc>", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
-        private const string OpenAngleBracketWithoutMatchingTagPattern = @"<(?!/?(table|thead|tr|td|span|literal|nowiki|http|img|sub|del|a |/a>|!--|caption|ol|ul|li|font|b>|/b>))";
+        private const string OpenAngleBracketWithoutMatchingTagPattern = @"<(?!/?(table|thead|tr|td|span|literal|nowiki|http|img|sub|del(?=>)|a |/a>|!--|caption|ol|ul|li|font|b>|/b>))";
         private static readonly Regex OpenAngleBracketWithoutMatchingTagNotInCodeBlock = new Regex(@"(?<!`|    [\s\W\w]*?)"+ OpenAngleBracketWithoutMatchingTagPattern, RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
         private static readonly Regex OpenAngleBracketWithoutMatchingTagForConfluenceImport = new Regex(OpenAngleBracketWithoutMatchingTagPattern, RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
